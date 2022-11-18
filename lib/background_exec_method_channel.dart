@@ -11,10 +11,11 @@ class MethodChannelBackgroundExec extends BackgroundExecPlatform {
   @visibleForTesting
   static const methodChannel = MethodChannel('background_exec');
 
-  static Future<void> initialize() async {
+  static Future<void> initialize(Function(String s) onCallHandler) async {
     final callback = PluginUtilities.getCallbackHandle(callbackDispatcher);
+    final callHandlerHandle = PluginUtilities.getCallbackHandle(onCallHandler);
     await methodChannel.invokeMethod('GeofencingPlugin.initializeService',
-        <dynamic>[callback?.toRawHandle()]);
+        <dynamic>[callback?.toRawHandle(), callHandlerHandle?.toRawHandle()]);
   }
 
   Future<void> sendBroadcast() async {

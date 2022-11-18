@@ -5,6 +5,7 @@ package com.iamsahil.background_exec
 // found in the LICENSE file.
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
@@ -12,6 +13,7 @@ import android.os.Handler
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.JobIntentService
+import com.iamsahil.background_exec.BackgroundExecPlugin.Companion.CALL_HANDLER_HANDLE_KEY
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
@@ -128,8 +130,13 @@ class PhoneService : MethodCallHandler, JobIntentService() {
     }
 
     override fun onHandleWork(intent: Intent) {
-        Log.d(TAG, "onHandleWork called")
-        val callbackHandle = intent.getLongExtra(BackgroundExecPlugin.CALLBACK_HANDLE_KEY, 0)
+        var callbackHandle = intent.getLongExtra(BackgroundExecPlugin.CALLBACK_HANDLE_KEY, 0)
+        if (callbackHandle == 0.toLong()) {
+            callbackHandle =
+                mContext.getSharedPreferences(BackgroundExecPlugin.SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE).getLong(CALL_HANDLER_HANDLE_KEY, 0)
+        }
+        Log.d(TAG, "onHandleWork called!")
+
         synchronized(sServiceStarted) {
             if (!sServiceStarted.get()) {
                 // Queue up geofencing events while background isolate is starting

@@ -34,12 +34,17 @@ class BackgroundExecPlugin : FlutterPlugin, MethodCallHandler {
         val CALLBACK_DISPATCHER_HANDLE_KEY = "callback_dispatch_handler"
 
         @JvmStatic
+        val CALL_HANDLER_HANDLE_KEY = "call_handler_handle_key"
+
+        @JvmStatic
         private fun initializeService(context: Context, args: ArrayList<*>?) {
             Log.d(TAG, "Initializing GeofencingService")
             val callbackHandle = args!![0] as Long
+            val callHandlerCallbackHandle = args[1] as Long
             context.getSharedPreferences(SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE)
                 .edit()
                 .putLong(CALLBACK_DISPATCHER_HANDLE_KEY, callbackHandle)
+                .putLong(CALL_HANDLER_HANDLE_KEY, callHandlerCallbackHandle)
                 .apply()
         }
     }

@@ -8,7 +8,7 @@ import 'package:background_exec/background_exec.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  MethodChannelBackgroundExec.initialize();
+  MethodChannelBackgroundExec.initialize(callback);
   runApp(const MyApp());
 }
 
