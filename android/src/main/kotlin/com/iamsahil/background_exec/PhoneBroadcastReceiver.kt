@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import androidx.work.WorkManager
 import io.flutter.embedding.engine.loader.FlutterLoader
 import io.flutter.view.FlutterMain
 
@@ -17,9 +18,11 @@ class PhoneBroadcastReceiver : BroadcastReceiver() {
     }
     override fun onReceive(context: Context, intent: Intent) {
         Log.d(TAG, "onReceived called")
+        val workManager = WorkManager.getInstance(context)
         val flutterLoader = FlutterLoader()
         flutterLoader.startInitialization(context)
         flutterLoader.ensureInitializationComplete(context, null)
-        PhoneService.enqueueWork(context, intent)
+        val workRequest = PhoneService.buildWorkRequest(intent.getLongExtra(BackgroundExecPlugin.CALLBACK_HANDLE_KEY, 0))
+        workManager.enqueue(workRequest)
     }
 }
